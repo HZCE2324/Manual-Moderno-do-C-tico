@@ -1,2 +1,581 @@
 # Manual-Moderno-do-C-tico
-z
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - Manual Moderno do Cético</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 2px,
+                rgba(255,255,255,0.03) 2px,
+                rgba(255,255,255,0.03) 4px
+            );
+            animation: float 20s linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateX(-50px); }
+            100% { transform: translateX(50px); }
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .header .emoji {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+            position: relative;
+            z-index: 2;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .search-box {
+            padding: 30px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #dee2e6;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+
+        .category-btn {
+            padding: 20px;
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .category-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .category-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .faq-content {
+            padding: 30px;
+        }
+
+        .faq-item {
+            margin-bottom: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .faq-question {
+            padding: 25px;
+            background: #f8f9fa;
+            cursor: pointer;
+            border: none;
+            width: 100%;
+            text-align: left;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e50;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: #e9ecef;
+            color: #667eea;
+        }
+
+        .faq-question.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .faq-icon {
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-question.active .faq-icon {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            padding: 0 25px;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .faq-answer.active {
+            padding: 25px;
+            max-height: 1000px;
+        }
+
+        .faq-answer ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .faq-answer li {
+            margin-bottom: 8px;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #ffd700 0%, #ffd700 100%);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .tool-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        .success-box {
+            background: linear-gradient(135deg, #51cf66, #40c057);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .categories {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .faq-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <span class="emoji">🧠</span>
+            <h1>Manual Moderno do Cético</h1>
+            <p>Como Pensar com Consciência no Século XXI - FAQ Interativo</p>
+        </div>
+
+        <div class="search-box">
+            <input type="text" class="search-input" placeholder="🔍 Pesquisar perguntas..." id="searchInput">
+        </div>
+
+        <div class="categories">
+            <button class="category-btn active" data-category="all">🌟 Todas</button>
+            <button class="category-btn" data-category="basics">📚 Conceitos Básicos</button>
+            <button class="category-btn" data-category="principles">🔍 Princípios</button>
+            <button class="category-btn" data-category="tools">🛠️ Ferramentas</button>
+            <button class="category-btn" data-category="traps">⚠️ Armadilhas</button>
+            <button class="category-btn" data-category="practice">🧩 Prática</button>
+        </div>
+
+        <div class="faq-content">
+            <!-- Conceitos Básicos -->
+            <div class="faq-item" data-category="basics">
+                <button class="faq-question">
+                    Por que ser cético é importante hoje em dia?
+                    <span class="faq-icon">▼</span>
+                </button>
+                <div class="faq-answer">
+                    <p>Vivemos na era da informação (e da desinformação). Ser cético não é duvidar de tudo, mas sim <span class="highlight">questionar com inteligência</span>, buscar evidências e pensar por conta própria.</p>
+                    <p>Com o volume massivo de informações que recebemos diariamente através de redes sociais, notícias e internet, desenvolver pensamento crítico é uma habilidade essencial para navegar no mundo moderno sem ser enganado.</p>
+                </div>
+            </div>
+
+            <div class="faq-item" data-category="basics">
+                <button class="faq-question">
+                    O que é ser um cético de verdade?
+                    <span class="faq-icon">▼</span>
+                </button>
+                <div class="faq-answer">
+                    <p>Ser cético <strong>não é negar tudo</strong>. Um cético verdadeiro:</p>
+                    <ul>
+                        <li><span class="highlight">Faz perguntas inteligentes</span></li>
+                        <li><span class="highlight">Avalia evidências</span> antes de formar opinião</li>
+                        <li><span class="highlight">Evita ser enganado</span> por informações falsas</li>
+                        <li>Mantém a mente aberta para mudar de ideia</li>
+                    </ul>
+                    <div class="warning-box">
+                        <strong>⚠️ Atenção:</strong> Ceticismo é diferente de conspiração! O conspiracionista começa com uma conclusão e depois busca justificar. O cético analisa evidências primeiro.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Princípios -->
+            <div class="faq-item" data-category="principles">
+                <button class="faq-question">
+                    Quais são os princípios do ceticismo moderno?
+                    <span class="faq-icon">▼</span>
+                </button>
+                <div class="faq-answer">
+                    <p>Aqui está o <strong>"código de conduta"</strong> do cético moderno:</p>
+                    <ul>
+                        <li><span class="highlight">Duvidar com respeito</span>: Questionar sem ofender</li>
+                        <li><span class="highlight">Procurar fontes confiáveis</span>: Sempre checar a origem da informação</li>
+                        <li><span class="highlight">Não cair na "bolha"</span>: Ouvir quem pensa diferente</li>
+                        <li><span class="highlight">Aceitar estar errado</span>: Mudar de ideia faz parte do crescimento</li>
+                        <li><span class="highlight">Exigir evidências, não opiniões</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Ferramentas -->
+            <div class="faq-item" data-category="tools">
+                <button class="faq-question">
+                    Quais ferramentas posso usar no dia a dia para ser mais cético?
+                    <span class="faq-icon">▼</span>
+                </button>
+                <div class="faq-answer">
+                    <p>Ferramentas essenciais para o cético atual:</p>
+                    <div class="tools-grid">
+                        <div class="tool-item">
+                            <strong>📰 Fact-checkers</strong><br>
+                            Aos Fatos, Lupa, Snopes, Agência Lupa
+                        </div>
+                        <div class="tool-item">
+                            <strong>🔬 Sites científicos</strong><br>
+                            PubMed, Google Scholar, universidades
+                        </div>
+                        <div class="tool-item">
+                            <strong>🤖 IA com espírito crítico</strong><br>
+                            ChatGPT, Claude (mas sempre verificando!)
+                        </div>
+                        <div class="tool-item">
+                            <strong>🧪 Método científico</strong><br>
+                            Hipótese → Teste → Conclusão
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Armadilhas -->
+            <div class="faq-item" data-category="traps">
+                <button class="faq-question">
+                    Quais são as principais armadilhas que devo evitar?
+                    <span class="faq-icon">▼</span>
+                </button>
+                <div class="faq-answer">
+                    <p>Cuidado com essas pegadinhas mentais:</p>
+                    <ul>
+                        <li><span class="highlight">Efeito bolha</span>: Só ouvir o que confirma suas ideias</li>
+                        <li><span class="highlight">Falácias lógicas</span>: "Se está na internet, é verdade"</li>
+                        <li><span class="highlight">Falsa autoridade</span>: Seguir alguém só por status, não por argumentos</li>
+                        <li><span class="highlight">Viés de confirmação</span>: Buscar só o que confirma o que já acredita</li>
+                    </ul>
+                    <div class="warning-box">
+                        <strong>🎯 Dica:</strong> Sempre se pergunte: "Quem se beneficia se eu acreditar nisso?" e "Que evidências contrariam essa ideia?"
+                    </div>
+                </div>
+            </div>
+
+            <!-- Prática -->
+            <div class="faq-item" data-category="practice">
+                <button class="faq-question">
+                    Onde posso aplicar o ceticismo na prática?
+                    <span class="faq-icon">▼</span>
+                </button>
+                <div class="faq-answer">
+                    <p>Situações do dia a dia onde ser cético é essencial:</p>
+                    <ul>
+                        <li><span class="highlight">Fake news</span> nas redes sociais</li>
+                        <li><span class="highlight">Promessas milagrosas</span>: curas rápidas, investimentos fáceis</li>
+                        <li><span class="highlight">Teorias da conspiração</span></li>
+                        <li><span class="highlight">Propagandas</span> e marketing exagerado</li>
+                        <li>Influenciadores vendendo "verdades absolutas"</li>
+                        <li>Notícias sensacionalistas</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="faq-item" data-category="practice">
+                <button class="faq-question">
+                    Como ser cético sem ser chato ou arrogante?
+                    <span class="faq-icon">▼</span>
+                </button>
+                <div class="faq-answer">
+                    <p>A <strong>ética do cético</strong> inclui:</p>
+                    <ul>
+                        <li>Ser <span class="highlight">humilde e aberto</span> ao diálogo</li>
+                        <li>Não impor ideias, mas <span class="highlight">provocar reflexão</span></li>
+                        <li>Ter <span class="highlight">responsabilidade social</span> ao divulgar informações</li>
+                        <li>Fazer perguntas ao invés de dar sermão</li>
+                        <li>Admitir quando não sabe algo</li>
+                    </ul>
+                    <div class="success-box">
+                        <strong>✅ Lembre-se:</strong> O objetivo é construir conhecimento junto, não ganhar discussões!
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item" data-category="practice">
+                <button class="faq-question">
+                    Como posso começar a praticar o ceticismo hoje?
+                    <span class="faq-icon">▼</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="success-box">
+                        <strong>🚀 Sua missão:</strong><br>
+                        "Desligue o automático. Pergunte. Leia. Pesquise. Pense. O mundo precisa de mais mentes livres e menos seguidores cegos."
+                    </div>
+                    <p><strong>Exercícios práticos:</strong></p>
+                    <ul>
+                        <li>Antes de compartilhar uma notícia, verifique a fonte</li>
+                        <li>Questione suas próprias crenças uma vez por semana</li>
+                        <li>Leia opiniões contrárias às suas</li>
+                        <li>Pergunte "como você sabe disso?" quando alguém fizer uma afirmação</li>
+                        <li>Use fact-checkers regularmente</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="faq-item" data-category="basics">
+                <button class="faq-question">
+                    Posso ser cético e ainda ter fé/espiritualidade?
+                    <span class="faq-icon">▼</span>
+                </button>
+                <div class="faq-answer">
+                    <p>Absolutamente! Ceticismo não é sobre eliminar todas as crenças, mas sobre:</p>
+                    <ul>
+                        <li>Distinguir entre <span class="highlight">fé pessoal</span> e <span class="highlight">afirmações científicas</span></li>
+                        <li>Ser honesto sobre o que você "sabe" vs. o que você "acredita"</li>
+                        <li>Não usar crenças pessoais para justificar afirmações factuais</li>
+                        <li>Respeitar que outros podem ter crenças diferentes</li>
+                    </ul>
+                    <p>Muitos cientistas e céticos têm vida espiritual rica. O importante é não confundir os domínios!</p>
+                </div>
+            </div>
+
+            <div class="faq-item" data-category="tools">
+                <button class="faq-question">
+                    Como identificar uma fonte confiável na internet?
+                    <span class="faq-icon">▼</span>
+                </button>
+                <div class="faq-answer">
+                    <p><strong>Checklist da fonte confiável:</strong></p>
+                    <ul>
+                        <li>✅ <span class="highlight">Autor identificado</span> com credenciais</li>
+                        <li>✅ <span class="highlight">Data de publicação</span> recente e relevante</li>
+                        <li>✅ <span class="highlight">Referencias e links</span> para estudos originais</li>
+                        <li>✅ <span class="highlight">Site respeitável</span> (.edu, .gov, jornais tradicionais)</li>
+                        <li>✅ <span class="highlight">Linguagem equilibrada</span>, não sensacionalista</li>
+                        <li>✅ <span class="highlight">Múltiplas fontes</span> confirmando a informação</li>
+                    </ul>
+                    <div class="warning-box">
+                        <strong>🚨 Bandeiras vermelhas:</strong> Sites sem autor, linguagem muito emocional, promessas impossíveis, teoria da conspiração como única explicação.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Elementos
+        const searchInput = document.getElementById('searchInput');
+        const categoryBtns = document.querySelectorAll('.category-btn');
+        const faqItems = document.querySelectorAll('.faq-item');
+        const faqQuestions = document.querySelectorAll('.faq-question');
+        const faqAnswers = document.querySelectorAll('.faq-answer');
+
+        // Funcionalidade de pesquisa
+        searchInput.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question').textContent.toLowerCase();
+                const answer = item.querySelector('.faq-answer').textContent.toLowerCase();
+                
+                if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+
+        // Funcionalidade de categorias
+        categoryBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove active de todos os botões
+                categoryBtns.forEach(b => b.classList.remove('active'));
+                // Adiciona active ao botão clicado
+                this.classList.add('active');
+                
+                const category = this.getAttribute('data-category');
+                
+                faqItems.forEach(item => {
+                    if (category === 'all' || item.getAttribute('data-category') === category) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+                
+                // Limpa a busca
+                searchInput.value = '';
+            });
+        });
+
+        // Funcionalidade de abrir/fechar perguntas
+        faqQuestions.forEach(question => {
+            question.addEventListener('click', function() {
+                const answer = this.nextElementSibling;
+                const isActive = this.classList.contains('active');
+                
+                // Fecha todas as outras perguntas
+                faqQuestions.forEach(q => {
+                    q.classList.remove('active');
+                    q.nextElementSibling.classList.remove('active');
+                });
+                
+                // Se não estava ativo, ativa
+                if (!isActive) {
+                    this.classList.add('active');
+                    answer.classList.add('active');
+                }
+            });
+        });
+
+        // Animação suave ao carregar
+        window.addEventListener('load', function() {
+            faqItems.forEach((item, index) => {
+                setTimeout(() => {
+                    item.style.opacity = '0';
+                    item.style.transform = 'translateY(20px)';
+                    item.style.transition = 'all 0.5s ease';
+                    
+                    setTimeout(() => {
+                        item.style.opacity = '1';
+                        item.style.transform = 'translateY(0)';
+                    }, 100);
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
